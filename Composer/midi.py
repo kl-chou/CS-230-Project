@@ -20,10 +20,10 @@ def midi_to_samples(fname):
 				ticks_per_measure = new_tpm
 				has_time_sig = True
 	if flag_warning:
-		print "  ^^^^^^ WARNING ^^^^^^"
-		print "    " + fname
-		print "    Detected multiple distinct time signatures."
-		print "  ^^^^^^ WARNING ^^^^^^"
+		print("  ^^^^^^ WARNING ^^^^^^")
+		print("    " + fname)
+		print("    Detected multiple distinct time signatures.")
+		print("  ^^^^^^ WARNING ^^^^^^")
 		return []
 	
 	all_notes = {}
