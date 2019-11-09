@@ -1,0 +1,7 @@
+LR:          0.001
+BN_M:        0.9
+BATCH_SIZE:  350
+NUM_OFFSETS: 1
+DO_RATE:     0.1
+num_songs:   1934
+optimizer:   RMSprop

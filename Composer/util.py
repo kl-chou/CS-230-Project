@@ -83,7 +83,7 @@ def embed_samples(samples):
 	samples.flags.writeable = False
 	e_samples = np.empty(samples.shape[:2], dtype=np.int32)
 	for i in range(n):
-		for j in range(m):
+		for j in range(m):s
 			note = samples[i,j].data
 			if note not in note_dict:
 				note_dict[note] = len(note_dict)
