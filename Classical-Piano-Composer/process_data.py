@@ -31,8 +31,6 @@ def get_notes(split, midi_filenames):
     for filename in tqdm(midi_filenames, total=len(midi_filenames)):
         midi = converter.parse('data/raw_data/maestro-v2.0.0/' + filename)
 
-        #print('Parsing {}'.format(filename))
-
         notes_to_parse = None
 
         try: # file has instrument parts
