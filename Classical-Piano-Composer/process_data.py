@@ -53,11 +53,11 @@ def get_notes(split, midi_filenames):
 
 def main():
     files = get_files()
-
-    for _set, filenames in files.items():
+    sets = ['validation', 'test']
+    for _set in sets:
         print('Processing {} set'.format(_set))
-        get_notes(_set, filenames)
-        print('Processed {} files'.format(len(filenames)))
+        get_notes(_set, files[_set])
+        print('Processed {} files'.format(len(files[_set])))
         print('-' * 80 + '\n') 
 
 if __name__ == '__main__':
