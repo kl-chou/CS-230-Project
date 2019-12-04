@@ -17,7 +17,7 @@ class LSTMModel(nn.Module):
 
         # The LSTM takes measures as inputs, and outputs hidden states
         # with dimensionality hidden_dim.d
-        self.lstm1 = nn.LSTM(input_size=input_dim[1], hidden_size=hidden_dim, batch_first=True)
+        self.lstm1 = nn.LSTM(input_size=input_dim, hidden_size=hidden_dim, batch_first=True)
         self.dropout = nn.Dropout(p=dropout_prob)
         self.lstm2 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
         self.linear1 = nn.Linear(in_features=hidden_dim, out_features=256)

@@ -9,12 +9,13 @@ def get_files():
     print("Loading data") 
     print('-' * 80 + '\n')
     metadata = pd.read_csv('data/raw_data/maestro-v2.0.0/maestro-v2.0.0.csv')
-
+    metadata = metadata[metadata['duration'] < 1000]
+    print(len(metadata))
     splits = ['train', 'validation', 'test']
     filenames = []
     
     for category in splits:
-
+        
         curr_set = metadata[metadata['split'] == category]
         filenames.append(curr_set.midi_filename.tolist())
             

@@ -12,12 +12,21 @@ from keras.layers import Activation
 from keras.utils import np_utils
 from keras.callbacks import ModelCheckpoint
 
+
+def load_data():
+    DATA = 'Classical-Piano-Composer/data/train_notes'
+    with open(DATA, 'rb') as f: 
+        notes = pickle.load(f)
+    vocab_size = len(set(notes))
+    return notes, vocab_size
+
+    
 def train_network():
     """ Train a Neural Network to generate music """
-    notes = get_notes()
+    notes, n_vocab = load_data()
 
     # get amount of pitch names
-    n_vocab = len(set(notes))
+    #n_vocab = len(set(notes))
 
     network_input, network_output = prepare_sequences(notes, n_vocab)
 
