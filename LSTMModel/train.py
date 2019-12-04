@@ -8,8 +8,6 @@ from lstm_model import *
 
 import matplotlib.pyplot as plt 
 
-MAX_LENGTH = 16
-NUM_OFFSETS = 1 
 EPOCHS = 100
 
 
