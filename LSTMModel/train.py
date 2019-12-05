@@ -34,7 +34,6 @@ class NotesDataset(Dataset):
 def prepare_sequences(notes, n_vocab):
     """ Prepare the sequences used by the Neural Network """
     if os.path.exists('Classical-Piano-Composer/data/train_notes_input.npy') and os.path.exists('Classical-Piano-Composer/data/train_notes_output.npy'):
-        print('loading')
         network_input = np.load('Classical-Piano-Composer/data/train_notes_input.npy')
         network_output = np.load('Classical-Piano-Composer/data/train_notes_output.npy')
         return network_input, network_output
@@ -124,6 +123,7 @@ def train():
 
             if i % 1000 == 0: 
                 if loss < min_loss:
+                    min_loss = loss 
                     torch.save({'epoch': epoch, 'state_dict': model.state_dict(), 'optimizer' : optimizer.state_dict()}, MODEL_PATH)
                     print('Saving checkpoint. Best loss: {}'.format(loss))
             # print statistics
