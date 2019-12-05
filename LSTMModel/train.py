@@ -8,8 +8,10 @@ from lstm_model import *
 
 import matplotlib.pyplot as plt 
 
-EPOCHS = 100
+EPOCHS = 5
+BATCH_SIZE = 512
 
+MODEL_PATH = 'LSTMModel/best_model.pth'
 
 class NotesDataset(Dataset): 
     
@@ -47,11 +49,12 @@ def prepare_sequences(notes, n_vocab):
     n_patterns = len(network_input)
 
     # reshape the input into a format compatible with LSTM layers
-    network_input = np.reshape(network_input, (n_patterns, sequence_length, 1))
+    network_input = np.reshape(network_input, (n_patterns, 1, sequence_length))
     # normalize input
     network_input = network_input / float(n_vocab)
 
-    network_output = np.eye(n_vocab, dtype='uint8')[network_output] #np_utils.to_categorical(network_output) 
+    #network_output = np.eye(n_vocab, dtype='uint8')[network_output] #np_utils.to_categorical(network_output) 
+    network_output = np.array(network_output)
 
     return (network_input, network_output)
 
@@ -73,11 +76,11 @@ def train():
     optimizer = torch.optim.Adam(model.parameters())
 
     training_set = NotesDataset(input_sequences, output_sequences)
-    trainloader = DataLoader(training_set, batch_size=128, shuffle=False, num_workers=4)
+    trainloader = DataLoader(training_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
 
     loss_function = nn.CrossEntropyLoss()
 
-    loss_values = []
+    loss_values, min_loss = [], 100 
 
     for epoch in range(EPOCHS):  # loop over the dataset multiple times
 
@@ -90,22 +93,24 @@ def train():
             optimizer.zero_grad()
 
             # forward + backward + optimize
-            outputs = model(inputs.float())
+            outputs = model(inputs.float()).squeeze()
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
-
             if i % 10 == 0: 
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, loss.item()))
                 loss_values.append(loss.item())
+
+            if i % 100 == 0: 
+                if loss < min_loss:
+                    torch.save({'epoch': epoch + 1, 'state_dict': model.state_dict(), 'optimizer' : optimizer.state_dict()}, MODEL_PATH)
             # print statistics
     
     return loss_values
-
-    
             
 
-    print('Finished Training')
+def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
+    torch.save(state, filename)
 
 
 def main():
