@@ -21,6 +21,7 @@ class LSTMModel(nn.Module):
         self.dropout = nn.Dropout(p=dropout_prob)
         self.lstm2 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
         self.linear1 = nn.Linear(in_features=hidden_dim, out_features=256)
+        self.relu = nn.ReLU(inplace=False)
         self.linear2 = nn.Linear(in_features=256, out_features=vocab_size)
 
         #self.output = nn.LogSoftmax()
@@ -33,7 +34,8 @@ class LSTMModel(nn.Module):
 
         lstm_out2, _ = self.lstm2(lstm_out1)
         linear_out1 = self.linear1(lstm_out2)
-        linear_out1 = self.dropout(linear_out1)
+        relu_out = self.relu(linear_out1)
+        linear_out1 = self.dropout(relu_out)
 
         linear_out2 = self.linear2(linear_out1) # Transform to (vocab_size, 1) output and then softmax to make prediction 
         #logits = self.output(linear_out2)
