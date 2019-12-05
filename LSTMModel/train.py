@@ -77,9 +77,12 @@ def train():
     input_sequences, output_sequences = prepare_sequences(notes, vocab_size)
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
+    optimizer = torch.optim.Adam(model.parameters())
+
+    start_epoch, model, optimizer = load_checkpoint(MODEL_PATH, model, optimizer)
+    print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
     model = model.to(device)
 
-    optimizer = torch.optim.Adam(model.parameters())
 
     training_set = NotesDataset(input_sequences, output_sequences)
     trainloader = DataLoader(training_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
@@ -88,7 +91,7 @@ def train():
 
     loss_values, min_loss = [], 100 
     print(model.linear1.weight.type())
-    for epoch in range(EPOCHS):  # loop over the dataset multiple times
+    for epoch in range(start_epoch, EPOCHS):  # loop over the dataset multiple times
 
         running_loss = 0.0
         for i, data in enumerate(trainloader):
@@ -104,20 +107,26 @@ def train():
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
-            if i % 10 == 0: 
+            if i % 100 == 0: 
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, loss.item()))
                 loss_values.append(loss.item())
 
-            if i % 100 == 0: 
+            if i % 1000 == 0: 
                 if loss < min_loss:
-                    torch.save({'epoch': epoch + 1, 'state_dict': model.state_dict(), 'optimizer' : optimizer.state_dict()}, MODEL_PATH)
+                    torch.save({'epoch': epoch, 'state_dict': model.state_dict(), 'optimizer' : optimizer.state_dict()}, MODEL_PATH)
+                    print('Saving checkpoint. Best loss: {}'.format(loss))
             # print statistics
     
     return loss_values
             
 
-def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
-    torch.save(state, filename)
+def load_checkpoint(filepath, model, optimizer):
+    checkpoint = torch.load(filepath)
+    epoch = checkpoint['epoch']
+    model.load_state_dict(checkpoint['state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+
+    return epoch, model, optimizer 
 
 
 def main():
