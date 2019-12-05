@@ -5,7 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 import pickle 
 # from keras.utils import np_utils
 from lstm_model import * 
-
+import os 
 import matplotlib.pyplot as plt 
 
 EPOCHS = 200
@@ -33,6 +33,11 @@ class NotesDataset(Dataset):
 
 def prepare_sequences(notes, n_vocab):
     """ Prepare the sequences used by the Neural Network """
+    if os.path.exists('Classical-Piano-Composer/data/train_notes_input') and os.path.exists('Classical-Piano-Composer/data/train_notes_output'):
+        network_input = np.load('Classical-Piano-Composer/data/train_notes_input')
+        network_output = np.load('Classical-Piano-Composer/data/train_notes_output')
+        return network_input, network_output
+
     sequence_length = 100
 
     # get all pitch names
@@ -60,6 +65,8 @@ def prepare_sequences(notes, n_vocab):
 
     #network_output = np.eye(n_vocab, dtype='uint8')[network_output] #np_utils.to_categorical(network_output) 
     network_output = np.array(network_output)
+    np.save('Classical-Piano-Composer/data/train_notes_input', network_input)
+    np.save('Classical-Piano-Composer/data/train_notes_output', network_output)
 
     return (network_input, network_output)
 
@@ -79,8 +86,10 @@ def train():
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
     optimizer = torch.optim.Adam(model.parameters())
 
-    start_epoch, model, optimizer = load_checkpoint(MODEL_PATH, model, optimizer)
-    print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
+    if os.path.exists('LSTMModel/best_model.pth'):
+        start_epoch, model, optimizer = load_checkpoint(MODEL_PATH, model, optimizer)
+        print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
+
     model = model.to(device)
 
 
