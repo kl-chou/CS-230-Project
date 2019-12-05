@@ -100,6 +100,9 @@ def train():
 
     loss_function = nn.CrossEntropyLoss().to(device)
 
+    for p in model.parameters():
+        print(p.device)
+
     loss_values, min_loss = [], 100 
     for epoch in range(start_epoch, EPOCHS):  # loop over the dataset multiple times
 
