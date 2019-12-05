@@ -50,8 +50,7 @@ def prepare_sequences(notes, n_vocab):
         sequence_out = notes[i + sequence_length]
         network_input.append([note_to_int[char] for char in sequence_in])
         network_output.append(note_to_int[sequence_out])
-        if i == 10:
-            break 
+        
     n_patterns = len(network_input)
 
     # reshape the input into a format compatible with LSTM layers

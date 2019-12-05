@@ -22,9 +22,7 @@ class LSTMModel(nn.Module):
         self.lstm2 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
         self.linear1 = nn.Linear(in_features=hidden_dim, out_features=256)
         self.linear2 = nn.Linear(in_features=256, out_features=vocab_size)
-        
-        print(vocab_size)
-        print(self.linear2)
+
         #self.output = nn.LogSoftmax()
 
 
