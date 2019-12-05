@@ -138,7 +138,7 @@ def load_checkpoint(filepath, model, optimizer):
     for state in optimizer.state.values():
         for k, v in state.items():
             if torch.is_tensor(v):
-                state[k] = v.cuda()
+                state[k] = v.to(device)
 
     return epoch, model, optimizer 
 
