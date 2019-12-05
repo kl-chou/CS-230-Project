@@ -16,8 +16,8 @@ MODEL_PATH = 'LSTMModel/best_model.pth'
 class NotesDataset(Dataset): 
     
     def __init__(self, in_sequences, out_sequences):
-        self.in_sequences = in_sequences 
-        self.out_sequences = out_sequences 
+        self.in_sequences = in_sequences.cuda()
+        self.out_sequences = out_sequences.cuda()
 
     def __len__(self):
         return len(self.in_sequences)
@@ -72,7 +72,7 @@ def train():
     input_sequences, output_sequences = prepare_sequences(notes, vocab_size)
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
-    model_loss = nn.CrossEntropyLoss()
+    model.cuda()
     optimizer = torch.optim.Adam(model.parameters())
 
     training_set = NotesDataset(input_sequences, output_sequences)
