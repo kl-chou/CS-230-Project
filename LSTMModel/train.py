@@ -33,9 +33,10 @@ class NotesDataset(Dataset):
 
 def prepare_sequences(notes, n_vocab):
     """ Prepare the sequences used by the Neural Network """
-    if os.path.exists('Classical-Piano-Composer/data/train_notes_input') and os.path.exists('Classical-Piano-Composer/data/train_notes_output'):
-        network_input = np.load('Classical-Piano-Composer/data/train_notes_input')
-        network_output = np.load('Classical-Piano-Composer/data/train_notes_output')
+    if os.path.exists('Classical-Piano-Composer/data/train_notes_input.npy') and os.path.exists('Classical-Piano-Composer/data/train_notes_output.npy'):
+        print('loading')
+        network_input = np.load('Classical-Piano-Composer/data/train_notes_input.npy')
+        network_output = np.load('Classical-Piano-Composer/data/train_notes_output.npy')
         return network_input, network_output
 
     sequence_length = 100
@@ -86,7 +87,7 @@ def train():
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
     optimizer = torch.optim.Adam(model.parameters())
     start_epoch = 0 
-    
+
     if os.path.exists('LSTMModel/best_model.pth'):
         start_epoch, model, optimizer = load_checkpoint(MODEL_PATH, model, optimizer)
         print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
