@@ -92,7 +92,7 @@ def train():
         print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
 
     model = model.to(device)
-
+    optimizer = optimizer.to(device)
 
     training_set = NotesDataset(input_sequences, output_sequences)
     trainloader = DataLoader(training_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
