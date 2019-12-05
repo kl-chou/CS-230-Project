@@ -18,13 +18,10 @@ class LSTMModel(nn.Module):
         # The LSTM takes measures as inputs, and outputs hidden states
         # with dimensionality hidden_dim.d
         self.lstm1 = nn.LSTM(input_size=input_dim[1], hidden_size=hidden_dim, batch_first=True)
-        print(self.lstm1)
         self.dropout = nn.Dropout(p=dropout_prob)
         self.lstm2 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
         self.linear1 = nn.Linear(in_features=hidden_dim, out_features=256)
-        print(self.linear1)
         self.relu = nn.ReLU(inplace=False)
-        #self.bn1 = nn.BatchNorm1d(hidden_size1)
         self.linear2 = nn.Linear(in_features=256, out_features=vocab_size)
 
         #self.output = nn.LogSoftmax()
@@ -36,7 +33,7 @@ class LSTMModel(nn.Module):
         lstm_out1 = self.dropout(lstm_out1)
 
         lstm_out2, (h_n, c_n) = self.lstm2(lstm_out1)
-        print(lstm_out2.size(), h_n.size(), c_n.size())
+
         linear_out1 = self.linear1(h_n.permute(1, 0, 2))
         relu_out = self.relu(linear_out1)
         linear_out1 = self.dropout(relu_out)

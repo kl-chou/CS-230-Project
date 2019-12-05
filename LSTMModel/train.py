@@ -23,7 +23,7 @@ class NotesDataset(Dataset):
     def __init__(self, in_sequences, out_sequences):
         self.in_sequences = in_sequences 
         self.out_sequences = out_sequences 
-        print(self.in_sequences.shape)
+
     def __len__(self):
         return len(self.in_sequences)
 
@@ -99,7 +99,6 @@ def train():
     loss_function = nn.CrossEntropyLoss().to(device)
 
     loss_values, min_loss = [], 100 
-    print(model.linear1.weight.type())
     for epoch in range(start_epoch, EPOCHS):  # loop over the dataset multiple times
 
         running_loss = 0.0
@@ -107,13 +106,12 @@ def train():
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
             inputs, labels = inputs.to(device), labels.to(device)
-            print(inputs.size())
             # zero the parameter gradients
             optimizer.zero_grad()
 
             # forward + backward + optimize
             outputs = model(inputs.float()).squeeze()
-            print(outputs.size(), labels.size())
+            
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
