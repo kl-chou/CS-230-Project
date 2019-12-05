@@ -23,7 +23,7 @@ class NotesDataset(Dataset):
     def __init__(self, in_sequences, out_sequences):
         self.in_sequences = in_sequences 
         self.out_sequences = out_sequences 
-
+        print(self.in_sequences.shape)
     def __len__(self):
         return len(self.in_sequences)
 
@@ -59,7 +59,7 @@ def prepare_sequences(notes, n_vocab):
     n_patterns = len(network_input)
 
     # reshape the input into a format compatible with LSTM layers
-    network_input = np.reshape(network_input, (n_patterns, 1, sequence_length))
+    network_input = np.reshape(network_input, (n_patterns, sequence_length, 1))
     # normalize input
     network_input = network_input / float(n_vocab)
 
@@ -107,12 +107,13 @@ def train():
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
             inputs, labels = inputs.to(device), labels.to(device)
-            
+            print(inputs.size())
             # zero the parameter gradients
             optimizer.zero_grad()
 
             # forward + backward + optimize
             outputs = model(inputs.float()).squeeze()
+            print(outputs.size(), labels.size())
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
