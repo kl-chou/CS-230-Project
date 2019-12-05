@@ -8,8 +8,8 @@ from lstm_model import *
 
 import matplotlib.pyplot as plt 
 
-EPOCHS = 5
-BATCH_SIZE = 512
+EPOCHS = 200
+BATCH_SIZE = 256
 
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
@@ -50,7 +50,7 @@ def prepare_sequences(notes, n_vocab):
         sequence_out = notes[i + sequence_length]
         network_input.append([note_to_int[char] for char in sequence_in])
         network_output.append(note_to_int[sequence_out])
-        
+
     n_patterns = len(network_input)
 
     # reshape the input into a format compatible with LSTM layers
