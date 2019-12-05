@@ -13,11 +13,16 @@ BATCH_SIZE = 512
 
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
+if torch.cuda.is_available():  
+  device = 'cuda:0' 
+else:  
+  device = 'cpu' 
+
 class NotesDataset(Dataset): 
     
     def __init__(self, in_sequences, out_sequences):
-        self.in_sequences = in_sequences.cuda()
-        self.out_sequences = out_sequences.cuda()
+        self.in_sequences = in_sequences 
+        self.out_sequences = out_sequences 
 
     def __len__(self):
         return len(self.in_sequences)
@@ -45,7 +50,8 @@ def prepare_sequences(notes, n_vocab):
         sequence_out = notes[i + sequence_length]
         network_input.append([note_to_int[char] for char in sequence_in])
         network_output.append(note_to_int[sequence_out])
-
+        if i == 10:
+            break 
     n_patterns = len(network_input)
 
     # reshape the input into a format compatible with LSTM layers
@@ -72,7 +78,8 @@ def train():
     input_sequences, output_sequences = prepare_sequences(notes, vocab_size)
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
-    model.cuda()
+    model = model.to(device)
+
     optimizer = torch.optim.Adam(model.parameters())
 
     training_set = NotesDataset(input_sequences, output_sequences)
@@ -81,14 +88,15 @@ def train():
     loss_function = nn.CrossEntropyLoss()
 
     loss_values, min_loss = [], 100 
-
+    print(model.linear1.weight.type())
     for epoch in range(EPOCHS):  # loop over the dataset multiple times
 
         running_loss = 0.0
         for i, data in enumerate(trainloader):
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
-
+            inputs, labels = inputs.to(device), labels.to(device)
+            
             # zero the parameter gradients
             optimizer.zero_grad()
 
