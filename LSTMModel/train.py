@@ -85,7 +85,8 @@ def train():
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
     optimizer = torch.optim.Adam(model.parameters())
-
+    start_epoch = 0 
+    
     if os.path.exists('LSTMModel/best_model.pth'):
         start_epoch, model, optimizer = load_checkpoint(MODEL_PATH, model, optimizer)
         print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
