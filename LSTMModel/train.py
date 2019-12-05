@@ -18,6 +18,8 @@ if torch.cuda.is_available():
 else:  
   device = 'cpu' 
 
+print('Using device: {}'.format(device))
+
 class NotesDataset(Dataset): 
     
     def __init__(self, in_sequences, out_sequences):
@@ -111,7 +113,7 @@ def train():
 
             # forward + backward + optimize
             outputs = model(inputs.float()).squeeze()
-            
+
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
