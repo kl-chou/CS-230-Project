@@ -20,7 +20,10 @@ class LSTMModel(nn.Module):
         self.lstm1 = nn.LSTM(input_size=input_dim[1], hidden_size=hidden_dim, batch_first=True)
         self.dropout = nn.Dropout(p=dropout_prob)
         self.lstm2 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
+        self.bn1 = nn.BatchNorm1d(num_features=input_dim[1], affine=False)
+        print(self.bn1)
         self.linear1 = nn.Linear(in_features=hidden_dim, out_features=256)
+        self.bn2 = nn.BatchNorm1d(num_features=input_dim[1], affine=False)
         self.relu = nn.ReLU(inplace=False)
         self.linear2 = nn.Linear(in_features=256, out_features=vocab_size)
 
@@ -33,12 +36,15 @@ class LSTMModel(nn.Module):
         lstm_out1 = self.dropout(lstm_out1)
 
         lstm_out2, (h_n, c_n) = self.lstm2(lstm_out1)
+        h_n = h_n.permute(1, 0, 2)
+        h_n = self.bn1(h_n)
 
-        linear_out1 = self.linear1(h_n.permute(1, 0, 2))
+        linear_out1 = self.linear1(h_n)
         relu_out = self.relu(linear_out1)
-        linear_out1 = self.dropout(relu_out)
+        relu_out = self.bn2(relu_out)
+        relu_out = self.dropout(relu_out)
 
-        linear_out2 = self.linear2(linear_out1)
+        linear_out2 = self.linear2(relu_out)
 
         return linear_out2
 

@@ -8,8 +8,8 @@ from lstm_model import *
 import os 
 import matplotlib.pyplot as plt 
 
-EPOCHS = 200
-BATCH_SIZE = 256
+EPOCHS = 100
+BATCH_SIZE = 128
 
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
@@ -99,9 +99,6 @@ def train():
     trainloader = DataLoader(training_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
 
     loss_function = nn.CrossEntropyLoss().to(device)
-
-    for p in model.parameters():
-        print(p.device)
 
     loss_values, min_loss = [], 100 
     for epoch in range(start_epoch, EPOCHS):  # loop over the dataset multiple times
