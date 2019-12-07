@@ -8,7 +8,7 @@ from lstm_model import *
 import os 
 import matplotlib.pyplot as plt 
 
-EPOCHS = 100
+EPOCHS = 10
 BATCH_SIZE = 64
 
 MODEL_PATH = 'LSTMModel/best_model.pth'
@@ -40,6 +40,7 @@ def prepare_sequences(notes, n_vocab):
     if os.path.exists('Classical-Piano-Composer/data/train_notes_input.npy') and os.path.exists('Classical-Piano-Composer/data/train_notes_output.npy'):
         network_input = np.load('Classical-Piano-Composer/data/train_notes_input.npy')
         network_output = np.load('Classical-Piano-Composer/data/train_notes_output.npy')
+        
         return network_input, network_output
 
     sequence_length = 100
@@ -122,12 +123,12 @@ def train():
             
             block_loss.append(loss.item())
 
-            if i % 100 == 0: 
+            if i % 200 == 0: 
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, np.array(block_loss).mean()))
                 loss_values.append(loss.item())
                 block_loss = []
 
-            if loss < min_loss:
+            if np.array(block_loss).mean() < min_loss:
                 min_loss = loss 
                 save_dict = {'epoch': epoch, 
                     'state_dict': model.state_dict(), 
