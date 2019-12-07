@@ -106,7 +106,8 @@ def train():
         running_loss = 0.0
         for i, (inputs, labels) in enumerate(trainloader):
 
-            inputs, labels = Variable(inputs.to(device), requires_grad=True), Variable(labels.to(device), requires_grad=False)
+            inputs, labels = inputs.to(device), labels.to(device)
+            inputs.requires_grad_(True)
             # zero the parameter gradients
             optimizer.zero_grad()
 
