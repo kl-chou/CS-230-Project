@@ -36,7 +36,7 @@ class LSTMModel(nn.Module):
         lstm_out1 = self.dropout(lstm_out1)
 
         lstm_out2, _ = self.lstm2(lstm_out1)
-        lstm_out2 = self.dropout(lstm_out1)
+        lstm_out2 = self.dropout(lstm_out2)
 
         lstm_out3, (h_n, c_n) = self.lstm3(lstm_out2)
         h_n = h_n.permute(1, 0, 2)
@@ -50,22 +50,3 @@ class LSTMModel(nn.Module):
         linear_out2 = self.linear2(relu_out)
 
         return linear_out2
-
-
-# model.add(LSTM(
-#         512,
-#         input_shape=(network_input.shape[1], network_input.shape[2]),
-#         recurrent_dropout=0.3,
-#         return_sequences=True
-#     ))
-#     model.add(LSTM(512, return_sequences=True, recurrent_dropout=0.3,))
-#     model.add(LSTM(512))
-#     model.add(BatchNorm())
-#     model.add(Dropout(0.3))
-#     model.add(Dense(256))
-#     model.add(Activation('relu'))
-#     model.add(BatchNorm())
-#     model.add(Dropout(0.3))
-#     model.add(Dense(n_vocab))
-#     model.add(Activation('softmax'))
-#     model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
