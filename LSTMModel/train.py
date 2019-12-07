@@ -109,8 +109,6 @@ def train():
         for i, (inputs, labels) in enumerate(trainloader):
 
             inputs, labels = inputs.to(device), labels.to(device)
-            print(inputs)
-            print(labels)
             inputs.requires_grad_(True)
 
             # zero the parameter gradients
