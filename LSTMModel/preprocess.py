@@ -54,4 +54,9 @@ def load_data():
     with open(DATA, 'rb') as f: 
         notes = pickle.load(f)
     vocab_size = len(set(notes))
-    return notes, vocab_size, pickle.load(open('note_to_int_dict'))
+    if os.path.exists('note_to_int_dict'): 
+        with open('note_to_int_dict') as f:
+            notes_to_int = pickle.load(f)
+    else:
+        notes_to_int = None  
+    return notes, vocab_size, pickle.load(), notes_to_int 
