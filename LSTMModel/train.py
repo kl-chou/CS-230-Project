@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 EPOCHS = 10
 BATCH_SIZE = 64
 
+print('EPOCHS: {}\nBATCH_SIZE: {}'.format(EPOCHS, BATCH_SIZE))
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
 if torch.cuda.is_available():  
