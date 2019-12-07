@@ -60,4 +60,4 @@ def load_data():
             notes_to_int = pickle.load(f)
     else:
         notes_to_int = None  
-    return notes, vocab_size, pickle.load(), notes_to_int 
+    return notes, vocab_size, notes_to_int 
