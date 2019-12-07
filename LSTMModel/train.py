@@ -129,13 +129,13 @@ def train():
                 loss_values.append(loss.item())
 
                 if np.array(block_loss).mean() < min_loss:
-                    min_loss = loss 
+                    min_loss = np.array(block_loss).mean() 
                     save_dict = {'epoch': epoch, 
                         'state_dict': model.state_dict(), 
                         'optimizer': optimizer.state_dict(), 
                         'min_loss': min_loss}
                     torch.save(save_dict, MODEL_PATH)
-                    print('Saving checkpoint. Best loss: {}'.format(loss))
+                    print('Saving checkpoint. Best loss: {}'.format())
                 
                 block_loss = []
 
