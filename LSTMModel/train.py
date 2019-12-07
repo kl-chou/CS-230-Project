@@ -88,7 +88,7 @@ def train():
     input_sequences, output_sequences = prepare_sequences(notes, vocab_size)
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
-    optimizer = torch.optim.Adam(model.parameters())
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.05)
     start_epoch, min_loss = 0, 100 
 
     if os.path.exists('LSTMModel/best_model.pth'):
@@ -124,15 +124,14 @@ def train():
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, loss.item()))
                 loss_values.append(loss.item())
 
-            if i % 1000 == 0: 
-                if loss < min_loss:
-                    min_loss = loss 
-                    save_dict = {'epoch': epoch, 
+            if loss < min_loss:
+                min_loss = loss 
+                save_dict = {'epoch': epoch, 
                     'state_dict': model.state_dict(), 
                     'optimizer': optimizer.state_dict(), 
                     'min_loss': min_loss}
-                    torch.save(save_dict, MODEL_PATH)
-                    print('Saving checkpoint. Best loss: {}'.format(loss))
+                torch.save(save_dict, MODEL_PATH)
+                print('Saving checkpoint. Best loss: {}'.format(loss))
             # print statistics
     
     return loss_values
