@@ -12,7 +12,7 @@ from lstm_model import *
 from preprocess import * 
 from notes_dataset import * 
 
-EPOCHS = 10
+EPOCHS = 100
 BATCH_SIZE = 64
 MODEL_PATH = 'LSTMModel/best_model.pth'
 

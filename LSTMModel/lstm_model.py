@@ -42,7 +42,9 @@ class LSTMModel(nn.Module):
         h_n = h_n.permute(1, 0, 2)
         h_n = self.bn1(h_n)
         h_n = self.dropout(h_n)
+
         linear_out1 = self.linear1(h_n)
+        
         relu_out = self.relu(linear_out1)
         relu_out = self.bn2(relu_out)
         relu_out = self.dropout(relu_out)
