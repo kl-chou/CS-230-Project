@@ -1,18 +1,22 @@
 import numpy as np 
+import matplotlib.pyplot as plt 
+
 import torch
 from torch import nn 
 from torch.utils.data import Dataset, DataLoader
+
 import pickle 
-# from keras.utils import np_utils
-from lstm_model import * 
 import os 
-import matplotlib.pyplot as plt 
+
+from lstm_model import * 
+from preprocess import * 
+from notes_dataset import * 
 
 EPOCHS = 10
 BATCH_SIZE = 64
+MODEL_PATH = 'LSTMModel/best_model.pth'
 
 print('EPOCHS: {}\nBATCH_SIZE: {}'.format(EPOCHS, BATCH_SIZE))
-MODEL_PATH = 'LSTMModel/best_model.pth'
 
 if torch.cuda.is_available():  
   device = 'cuda:0' 
@@ -21,73 +25,10 @@ else:
 
 print('Using device: {}'.format(device))
 
-class NotesDataset(Dataset): 
-    
-    def __init__(self, in_sequences, out_sequences):
-        self.in_sequences = torch.from_numpy(in_sequences).float()
-        self.in_sequences.to(device)
-        self.out_sequences = torch.from_numpy(out_sequences)
-        self.out_sequences.to(device)
-
-    def __len__(self):
-        return len(self.in_sequences)
-
-    def __getitem__(self, idx): 
-        return self.in_sequences[idx], self.out_sequences[idx]
-
-
-def prepare_sequences(notes, n_vocab):
-    """ Prepare the sequences used by the Neural Network """
-    if os.path.exists('Classical-Piano-Composer/data/train_notes_input.npy') and os.path.exists('Classical-Piano-Composer/data/train_notes_output.npy'):
-        network_input = np.load('Classical-Piano-Composer/data/train_notes_input.npy')
-        network_output = np.load('Classical-Piano-Composer/data/train_notes_output.npy')
-        
-        return network_input, network_output
-
-    sequence_length = 100
-
-    # get all pitch names
-    pitchnames = sorted(set(item for item in notes))
-
-     # create a dictionary to map pitches to integers
-    note_to_int = dict((note, number) for number, note in enumerate(pitchnames))
-
-    network_input = []
-    network_output = []
-
-    # create input sequences and the corresponding outputs
-    for i in range(0, len(notes) - sequence_length, 1):
-        sequence_in = notes[i:i + sequence_length]
-        sequence_out = notes[i + sequence_length]
-        network_input.append([note_to_int[char] for char in sequence_in])
-        network_output.append(note_to_int[sequence_out])
-
-    n_patterns = len(network_input)
-
-    # reshape the input into a format compatible with LSTM layers
-    network_input = np.reshape(network_input, (n_patterns, sequence_length, 1))
-    # normalize input
-    network_input = network_input / float(n_vocab)
-
-    #network_output = np.eye(n_vocab, dtype='uint8')[network_output] #np_utils.to_categorical(network_output) 
-    network_output = np.array(network_output)
-    np.save('Classical-Piano-Composer/data/train_notes_input', network_input)
-    np.save('Classical-Piano-Composer/data/train_notes_output', network_output)
-
-    return (network_input, network_output)
-
-
-def load_data():
-    DATA = 'Classical-Piano-Composer/data/train_notes'
-    with open(DATA, 'rb') as f: 
-        notes = pickle.load(f)
-    vocab_size = len(set(notes))
-    return notes, vocab_size
-
 
 def train():
-    notes, vocab_size = load_data()
-    input_sequences, output_sequences = prepare_sequences(notes, vocab_size)
+    notes, vocab_size, _ = load_data()
+    input_sequences, output_sequences = prepare_sequences(notes, vocab_size, 'train')
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-2, momentum=0.9)
@@ -99,6 +40,7 @@ def train():
 
     model = model.to(device)
     model.train()
+    
     training_set = NotesDataset(input_sequences, output_sequences)
     trainloader = DataLoader(training_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
 
