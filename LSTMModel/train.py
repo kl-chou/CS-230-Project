@@ -13,7 +13,7 @@ from preprocess import *
 from notes_dataset import * 
 
 EPOCHS = 200
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
 print('EPOCHS: {}\nBATCH_SIZE: {}'.format(EPOCHS, BATCH_SIZE))
