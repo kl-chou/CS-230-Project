@@ -1,5 +1,6 @@
 import numpy as np 
 import pickle 
+import os 
 
 def prepare_sequences(notes, n_vocab, set_name, note_to_int=None):
     """ Prepare the sequences used by the Neural Network """
