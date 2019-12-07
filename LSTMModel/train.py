@@ -88,7 +88,7 @@ def train():
     input_sequences, output_sequences = prepare_sequences(notes, vocab_size)
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
-    optimizer = torch.optim.RMSprop(model.parameters(), lr=1e-1)
+    optimizer = torch.optim.RMSprop(model.parameters())
     start_epoch, min_loss = 0, 100 
 
     if os.path.exists('LSTMModel/best_model.pth'):
