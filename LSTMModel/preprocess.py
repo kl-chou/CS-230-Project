@@ -48,7 +48,7 @@ def prepare_sequences(notes, n_vocab, set_name, note_to_int=None):
             pickle.dump(note_to_int, f)
 
 
-    return network_input, network_output, note_to_int
+    return network_input, network_output
 
 def load_data():
     DATA = 'Classical-Piano-Composer/data/train_notes'
