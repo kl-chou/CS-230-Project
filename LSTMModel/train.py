@@ -12,7 +12,7 @@ from lstm_model import *
 from preprocess import * 
 from notes_dataset import * 
 
-EPOCHS = 200
+EPOCHS = 100
 BATCH_SIZE = 128
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
@@ -33,6 +33,7 @@ def train():
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-2, momentum=0.9)
     start_epoch, min_loss = 0, 100 
+    loss_values, block_loss = [], []  
 
     if os.path.exists('LSTMModel/best_model.pth'):
         start_epoch, model, optimizer, min_loss = load_checkpoint(MODEL_PATH, model, optimizer)
@@ -46,7 +47,6 @@ def train():
 
     loss_function = nn.CrossEntropyLoss().to(device)
 
-    loss_values, block_loss = [], []  
     for epoch in range(start_epoch, EPOCHS):  # loop over the dataset multiple times
 
         running_loss = 0.0
@@ -75,7 +75,8 @@ def train():
                     save_dict = {'epoch': epoch, 
                         'state_dict': model.state_dict(), 
                         'optimizer': optimizer.state_dict(), 
-                        'min_loss': min_loss}
+                        'min_loss': min_loss,
+                        'loss': loss_values}
                     torch.save(save_dict, MODEL_PATH)
                     print('Saving checkpoint. Best loss: {}'.format(min_loss))
                 
@@ -96,7 +97,7 @@ def load_checkpoint(filepath, model, optimizer):
             if torch.is_tensor(v):
                 state[k] = v.to(device)
 
-    return epoch, model, optimizer, checkpoint['min_loss']
+    return epoch, model, optimizer, checkpoint['min_loss'], checkpoint['loss']
 
 
 def main():
@@ -104,6 +105,7 @@ def main():
     plt.figure()
     plt.plot(loss_values)
     plt.savefig('LSTMModel/loss.png', dpi=600)
+    np.save('loss_values_epoch{}_batchsize{}'.format(EPOCHS, BATCH_SIZE), loss_values)
 
 
 if __name__ == '__main__':
