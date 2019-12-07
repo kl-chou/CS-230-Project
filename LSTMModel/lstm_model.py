@@ -19,7 +19,7 @@ class LSTMModel(nn.Module):
         # with dimensionality hidden_dim.d
         self.lstm1 = nn.LSTM(input_size=input_dim[1], hidden_size=hidden_dim, batch_first=True)
         self.dropout = nn.Dropout(p=dropout_prob)
-        self.lstm2 = nn.LSTM(input_size=input_dim[1], hidden_size=hidden_dim, batch_first=True)
+        self.lstm2 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
         self.lstm3 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
         self.bn1 = nn.BatchNorm1d(num_features=input_dim[1], affine=False)
         self.linear1 = nn.Linear(in_features=hidden_dim, out_features=256)
@@ -37,7 +37,7 @@ class LSTMModel(nn.Module):
 
         lstm_out2, _ = self.lstm2(lstm_out1)
         lstm_out2 = self.dropout(lstm_out1)
-        
+
         lstm_out3, (h_n, c_n) = self.lstm3(lstm_out2)
         h_n = h_n.permute(1, 0, 2)
         h_n = self.bn1(h_n)
