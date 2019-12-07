@@ -21,7 +21,6 @@ class LSTMModel(nn.Module):
         self.dropout = nn.Dropout(p=dropout_prob)
         self.lstm2 = nn.LSTM(input_size=hidden_dim, hidden_size=hidden_dim, batch_first=True)
         self.bn1 = nn.BatchNorm1d(num_features=input_dim[1], affine=False)
-        print(self.bn1)
         self.linear1 = nn.Linear(in_features=hidden_dim, out_features=256)
         self.bn2 = nn.BatchNorm1d(num_features=input_dim[1], affine=False)
         self.relu = nn.ReLU(inplace=False)

@@ -87,10 +87,10 @@ def train():
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
     optimizer = torch.optim.Adam(model.parameters())
-    start_epoch = 0 
+    start_epoch, min_loss = 0, 100 
 
     if os.path.exists('LSTMModel/best_model.pth'):
-        start_epoch, model, optimizer = load_checkpoint(MODEL_PATH, model, optimizer)
+        start_epoch, model, optimizer, min_loss = load_checkpoint(MODEL_PATH, model, optimizer)
         print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
 
     model = model.to(device)
@@ -100,14 +100,13 @@ def train():
 
     loss_function = nn.CrossEntropyLoss().to(device)
 
-    loss_values, min_loss = [], 100 
+    loss_values = []  
     for epoch in range(start_epoch, EPOCHS):  # loop over the dataset multiple times
 
         running_loss = 0.0
-        for i, data in enumerate(trainloader):
-            # get the inputs; data is a list of [inputs, labels]
-            inputs, labels = data
-            inputs, labels = inputs.to(device), labels.to(device)
+        for i, (inputs, labels) in enumerate(trainloader):
+
+            inputs, labels = Variable(inputs.to(device), requires_grad=True), Variable(labels.to(device), requires_grad=False)
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -116,6 +115,9 @@ def train():
 
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
+
+            for param in model.parameters():
+                print(param.grad.data.sum())
             optimizer.step()
             if i % 100 == 0: 
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, loss.item()))
@@ -124,7 +126,10 @@ def train():
             if i % 1000 == 0: 
                 if loss < min_loss:
                     min_loss = loss 
-                    torch.save({'epoch': epoch, 'state_dict': model.state_dict(), 'optimizer' : optimizer.state_dict()}, MODEL_PATH)
+                    torch.save({'epoch': epoch, 
+                    'state_dict': model.state_dict(), 
+                    'optimizer': optimizer.state_dict(), 
+                    'min_loss': min_loss}, MODEL_PATH)
                     print('Saving checkpoint. Best loss: {}'.format(loss))
             # print statistics
     
