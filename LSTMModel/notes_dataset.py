@@ -1,7 +1,11 @@
 from torch.utils.data import Dataset, DataLoader
 import torch
 
-
+if torch.cuda.is_available():  
+  device = 'cuda:0' 
+else:  
+  device = 'cpu' 
+  
 class NotesDataset(Dataset): 
     
     def __init__(self, in_sequences, out_sequences):
