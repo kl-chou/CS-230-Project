@@ -28,7 +28,7 @@ print('Using device: {}'.format(device))
 
 def train():
     notes, vocab_size, note_to_int_dict = load_data()
-    input_sequences, output_sequences = prepare_sequences(notes, vocab_size, note_to_int_dict)
+    input_sequences, output_sequences = prepare_sequences(notes, vocab_size, 'train')
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-2, momentum=0.9)
