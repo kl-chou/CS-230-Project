@@ -36,7 +36,7 @@ def train():
     loss_values, block_loss = [], []  
 
     if os.path.exists('LSTMModel/best_model.pth'):
-        start_epoch, model, optimizer, min_loss = load_checkpoint(MODEL_PATH, model, optimizer)
+        start_epoch, model, optimizer, min_loss, loss_values = load_checkpoint(MODEL_PATH, model, optimizer)
         print('Loaded checkpoint. Starting epoch {}'.format(start_epoch))
 
     model = model.to(device)
