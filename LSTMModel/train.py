@@ -108,7 +108,7 @@ def train():
 
             inputs, labels = inputs.to(device), labels.to(device)
             inputs.requires_grad_(True)
-            
+
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -126,10 +126,12 @@ def train():
             if i % 1000 == 0: 
                 if loss < min_loss:
                     min_loss = loss 
-                    torch.save({'epoch': epoch, 
+                    save_dict = {'epoch': epoch, 
                     'state_dict': model.state_dict(), 
                     'optimizer': optimizer.state_dict(), 
-                    'min_loss': min_loss}, MODEL_PATH)
+                    'min_loss': min_loss}
+                    print(save_dict['min_loss'])
+                    torch.save(, MODEL_PATH)
                     print('Saving checkpoint. Best loss: {}'.format(loss))
             # print statistics
     
