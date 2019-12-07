@@ -23,8 +23,10 @@ print('Using device: {}'.format(device))
 class NotesDataset(Dataset): 
     
     def __init__(self, in_sequences, out_sequences):
-        self.in_sequences = in_sequences 
-        self.out_sequences = out_sequences 
+        self.in_sequences = torch.from_numpy(in_sequences).float()
+        self.in_sequences.to(device)
+        self.out_sequences = torch.from_numpy(out_sequences)
+        self.out_sequences.to(device)
 
     def __len__(self):
         return len(self.in_sequences)
@@ -107,14 +109,15 @@ def train():
         for i, (inputs, labels) in enumerate(trainloader):
 
             inputs, labels = inputs.to(device), labels.to(device)
+            print(inputs)
+            print(labels)
             inputs.requires_grad_(True)
 
             # zero the parameter gradients
             optimizer.zero_grad()
 
             # forward + backward + optimize
-            outputs = model(inputs.float()).squeeze()
-            print(outputs)
+            outputs = model(inputs).squeeze()
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
@@ -148,7 +151,7 @@ def load_checkpoint(filepath, model, optimizer):
             if torch.is_tensor(v):
                 state[k] = v.to(device)
 
-    return epoch, model, optimizer 
+    return epoch, model, optimizer, checkpoint['min_loss']
 
 
 def main():
