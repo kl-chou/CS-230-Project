@@ -1,3 +1,6 @@
+from torch.utils.data import Dataset, DataLoader
+
+
 class NotesDataset(Dataset): 
     
     def __init__(self, in_sequences, out_sequences):
