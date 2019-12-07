@@ -121,7 +121,7 @@ def train():
             optimizer.step()
 
             if i % 100 == 0: 
-                print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, loss.item()))
+                print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, np.array(loss_values).mean()))
                 loss_values.append(loss.item())
 
             if loss < min_loss:
