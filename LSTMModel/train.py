@@ -129,20 +129,18 @@ def train():
                 loss_values.append(loss.item())
                 block_loss = []
 
-            if np.array(block_loss).mean() < min_loss:
-                min_loss = loss 
-                save_dict = {'epoch': epoch, 
-                    'state_dict': model.state_dict(), 
-                    'optimizer': optimizer.state_dict(), 
-                    'min_loss': min_loss}
-                torch.save(save_dict, MODEL_PATH)
-                print('Saving checkpoint. Best loss: {}'.format(loss))
+                if np.array(block_loss).mean() < min_loss:
+                    min_loss = loss 
+                    save_dict = {'epoch': epoch, 
+                        'state_dict': model.state_dict(), 
+                        'optimizer': optimizer.state_dict(), 
+                        'min_loss': min_loss}
+                    torch.save(save_dict, MODEL_PATH)
+                    print('Saving checkpoint. Best loss: {}'.format(loss))
             # print statistics
     
     return loss_values
             
-
-
 
 def load_checkpoint(filepath, model, optimizer):
     checkpoint = torch.load(filepath)
@@ -162,6 +160,7 @@ def main():
     plt.figure()
     plt.plot(loss_values)
     plt.savefig('LSTMModel/loss.png', dpi=600)
+
 
 if __name__ == '__main__':
     main()
