@@ -97,7 +97,7 @@ def load_checkpoint(filepath, model, optimizer):
             if torch.is_tensor(v):
                 state[k] = v.to(device)
 
-    return epoch, model, optimizer, checkpoint['min_loss'], checkpoint['loss']
+    return epoch, model, optimizer, checkpoint['min_loss'], checkpoint['loss'] if 'loss' in checkpoint else []
 
 
 def main():
