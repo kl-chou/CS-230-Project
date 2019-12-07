@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt 
 
 EPOCHS = 100
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
@@ -88,7 +88,7 @@ def train():
     input_sequences, output_sequences = prepare_sequences(notes, vocab_size)
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.05)
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-2, momentum=0.9)
     start_epoch, min_loss = 0, 100 
 
     if os.path.exists('LSTMModel/best_model.pth'):
