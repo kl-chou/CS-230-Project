@@ -114,7 +114,7 @@ def train():
 
             # forward + backward + optimize
             outputs = model(inputs.float()).squeeze()
-
+            print(outputs)
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
@@ -131,7 +131,7 @@ def train():
                     'optimizer': optimizer.state_dict(), 
                     'min_loss': min_loss}
                     print(save_dict['min_loss'])
-                    torch.save(, MODEL_PATH)
+                    torch.save(save_dict, MODEL_PATH)
                     print('Saving checkpoint. Best loss: {}'.format(loss))
             # print statistics
     
