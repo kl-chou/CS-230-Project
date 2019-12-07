@@ -102,7 +102,7 @@ def train():
 
     loss_function = nn.CrossEntropyLoss().to(device)
 
-    loss_values = []  
+    loss_values, block_loss = [], []  
     for epoch in range(start_epoch, EPOCHS):  # loop over the dataset multiple times
 
         running_loss = 0.0
@@ -119,10 +119,13 @@ def train():
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
             optimizer.step()
+            
+            block_loss.append(loss.item())
 
             if i % 100 == 0: 
-                print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, np.array(loss_values).mean()))
+                print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, np.array(block_loss).mean()))
                 loss_values.append(loss.item())
+                block_loss = []
 
             if loss < min_loss:
                 min_loss = loss 
