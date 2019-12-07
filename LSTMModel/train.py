@@ -108,6 +108,7 @@ def train():
 
             inputs, labels = inputs.to(device), labels.to(device)
             inputs.requires_grad_(True)
+            
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -116,10 +117,8 @@ def train():
 
             loss = loss_function(input=outputs, target=labels.long())
             loss.backward()
-
-            for param in model.parameters():
-                print(param.grad.data.sum())
             optimizer.step()
+
             if i % 100 == 0: 
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, loss.item()))
                 loss_values.append(loss.item())
