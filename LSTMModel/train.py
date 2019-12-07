@@ -135,7 +135,7 @@ def train():
                         'optimizer': optimizer.state_dict(), 
                         'min_loss': min_loss}
                     torch.save(save_dict, MODEL_PATH)
-                    print('Saving checkpoint. Best loss: {}'.format())
+                    print('Saving checkpoint. Best loss: {}'.format(min_loss))
                 
                 block_loss = []
 
