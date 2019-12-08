@@ -46,3 +46,6 @@ def main():
     sets = ['train', 'validation', 'test']
     for name in sets:
         eval_(model, name)
+
+if __name__ == '__main__':
+    main()
