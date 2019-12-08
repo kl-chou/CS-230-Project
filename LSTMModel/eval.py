@@ -36,7 +36,7 @@ def eval_(model, set_name):
     print(output_seq[:10])
     accuracy = np.sum(predictions == output_sequences) / len(predictions)
     print('{} accuracy: {}'.format(set_name, accuracy))
-        
+    np.save('LSTMModel/predictions_{}'.format(set_name), predictions)
         
 def load_model(model, model_path):
     checkpoint = torch.load(model_path)
