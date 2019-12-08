@@ -47,7 +47,7 @@ def main():
     model = load_model(model, 'LSTMModel/best_model.pth') 
 
     model = model.to(device)
-    model.test()
+    model.eval()
 
     sets = ['train', 'validation', 'test']
     for name in sets:
