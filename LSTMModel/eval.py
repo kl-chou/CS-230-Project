@@ -5,6 +5,12 @@ from preprocess import *
 from lstm_model import * 
 
 
+if torch.cuda.is_available():  
+  device = 'cuda:0' 
+else:  
+  device = 'cpu' 
+
+
 def eval_(model, set_name):
     notes, vocab_size, notes_to_int = load_data(set_name)
     input_seq, output_seq = prepare_sequences(notes, vocab_size, set_name, notes_to_int)
