@@ -37,7 +37,7 @@ def load_model(model, model_path):
 
 
 def main():
-    model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
+    model = LSTMModel(input_dim=(100, 1), hidden_dim=512, vocab_size=vocab_size)
     model = load_model(model, 'LSTMModel/best_model.pth') 
 
     model = model.to(device)
