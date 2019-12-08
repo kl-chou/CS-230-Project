@@ -66,21 +66,18 @@ def train():
             
             block_loss.append(loss.item())
 
-            if i % 200 == 0: 
+            if i % 500 == 0: 
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, np.array(block_loss).mean()))
-                loss_values.append(loss.item())
+                block_loss = []
 
-                if np.array(block_loss).mean() < min_loss:
-                    min_loss = np.array(block_loss).mean() 
-                    save_dict = {'epoch': epoch, 
+        save_dict = {'epoch': epoch, 
                         'state_dict': model.state_dict(), 
                         'optimizer': optimizer.state_dict(), 
                         'min_loss': min_loss,
                         'loss': loss_values}
-                    torch.save(save_dict, MODEL_PATH)
-                    print('Saving checkpoint. Best loss: {}'.format(min_loss))
+        torch.save(save_dict, MODEL_PATH)
+        print('Saving checkpoint. Best loss: {}'.format(min_loss))
                 
-                block_loss = []
 
             # print statistics
     
