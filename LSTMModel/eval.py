@@ -20,7 +20,7 @@ def eval_(model, set_name):
     training_set = NotesDataset(input_seq, output_seq)
     trainloader = DataLoader(training_set, batch_size=1, shuffle=False, num_workers=4)
     
-    predictions = []
+    predictions = np.array([], dtype=np.int64)
     for i, (inputs, labels) in enumerate(trainloader):
 
         inputs, labels = inputs.to(device), labels.to(device)
@@ -30,7 +30,7 @@ def eval_(model, set_name):
         # forward + backward + optimize
         outputs = model(inputs).squeeze()
         pred = np.argmax(outputs.cpu().detach().numpy())
-        predictions.extend(pred)
+        predictions = np.hstack((predictions, pred))
 
     print(predictions[:10])
     print(output_seq[:10])
@@ -51,7 +51,7 @@ def main():
     model = model.to(device)
     model.eval()
 
-    sets = ['train', 'validation', 'test']
+    sets = ['validation', 'test', 'train']
     for name in sets:
         eval_(model, name)
 
