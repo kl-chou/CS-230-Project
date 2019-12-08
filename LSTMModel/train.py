@@ -12,8 +12,8 @@ from lstm_model import *
 from preprocess import * 
 from notes_dataset import * 
 
-EPOCHS = 100
-BATCH_SIZE = 128
+EPOCHS = 50 
+BATCH_SIZE = 32
 MODEL_PATH = 'LSTMModel/best_model.pth'
 
 print('EPOCHS: {}\nBATCH_SIZE: {}'.format(EPOCHS, BATCH_SIZE))
@@ -27,7 +27,7 @@ print('Using device: {}'.format(device))
 
 
 def train():
-    notes, vocab_size, _ = load_data()
+    notes, vocab_size, _ = load_data('train')
     input_sequences, output_sequences = prepare_sequences(notes, vocab_size, 'train')
 
     model = LSTMModel(input_dim=input_sequences.shape[1:], hidden_dim=512, vocab_size=vocab_size)
@@ -66,21 +66,18 @@ def train():
             
             block_loss.append(loss.item())
 
-            if i % 200 == 0: 
+            if i % 500 == 0: 
                 print('Epoch: {}\tIteration: {}\tLoss: {}'.format(epoch, i, np.array(block_loss).mean()))
-                loss_values.append(loss.item())
+                block_loss = []
 
-                if np.array(block_loss).mean() < min_loss:
-                    min_loss = np.array(block_loss).mean() 
-                    save_dict = {'epoch': epoch, 
+        save_dict = {'epoch': epoch, 
                         'state_dict': model.state_dict(), 
                         'optimizer': optimizer.state_dict(), 
                         'min_loss': min_loss,
                         'loss': loss_values}
-                    torch.save(save_dict, MODEL_PATH)
-                    print('Saving checkpoint. Best loss: {}'.format(min_loss))
+        torch.save(save_dict, MODEL_PATH)
+        print('Saving checkpoint. Best loss: {}'.format(min_loss))
                 
-                block_loss = []
 
             # print statistics
     

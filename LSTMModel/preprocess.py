@@ -28,8 +28,8 @@ def prepare_sequences(notes, n_vocab, set_name, note_to_int=None):
     for i in range(0, len(notes) - sequence_length, 1):
         sequence_in = notes[i:i + sequence_length]
         sequence_out = notes[i + sequence_length]
-        network_input.append([note_to_int[char] for char in sequence_in])
-        network_output.append(note_to_int[sequence_out])
+        network_input.append([note_to_int[char] if char in note_to_int else 0 for char in sequence_in ])
+        network_output.append(note_to_int[sequence_out ] if sequence_out in note_to_int else 0)
 
     n_patterns = len(network_input)
 
@@ -38,7 +38,6 @@ def prepare_sequences(notes, n_vocab, set_name, note_to_int=None):
     # normalize input
     network_input = network_input / float(n_vocab)
 
-    #network_output = np.eye(n_vocab, dtype='uint8')[network_output] #np_utils.to_categorical(network_output) 
     network_output = np.array(network_output)
 
     np.save(set_path + '_input', network_input)
@@ -50,14 +49,34 @@ def prepare_sequences(notes, n_vocab, set_name, note_to_int=None):
 
     return network_input, network_output
 
-def load_data():
-    DATA = 'Classical-Piano-Composer/data/train_notes'
-    with open(DATA, 'rb') as f: 
+
+def load_data(set_name):
+    set_path = 'Classical-Piano-Composer/data/{}_notes'.format(set_name)
+    with open(set_path, 'rb') as f: 
         notes = pickle.load(f)
+
     vocab_size = len(set(notes))
+
     if os.path.exists('note_to_int_dict'): 
         with open('note_to_int_dict', 'rb') as f:
             notes_to_int = pickle.load(f)
     else:
         notes_to_int = None  
     return notes, vocab_size, notes_to_int 
+
+
+def main():
+    sets = ['train', 'validation', 'test']
+
+    for split in sets:
+        if split == 'train':
+            notes, vocab_size, notes_dict = load_data(split)
+        else: 
+            notes, _, _ = load_data(split)
+
+        print('Processed {}, Vocab size: {}'.format(split, vocab_size))
+        network_input, network_output = prepare_sequences(notes, n_vocab=vocab_size, set_name=split, note_to_int=notes_dict)
+        print('Processed {} examples'.format(len(network_output)))
+
+if __name__ == '__main__':
+    main()
