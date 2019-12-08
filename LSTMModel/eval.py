@@ -1,10 +1,11 @@
 import torch 
 import numpy as np 
+from torch.utils.data import Dataset, DataLoader
+from tqdm import tqdm
 
 from preprocess import * 
 from lstm_model import * 
 from notes_dataset import * 
-from torch.utils.data import Dataset, DataLoader
 
 
 if torch.cuda.is_available():  
@@ -21,7 +22,7 @@ def eval_(model, set_name):
     trainloader = DataLoader(training_set, batch_size=1, shuffle=False, num_workers=4)
     
     predictions = np.array([], dtype=np.int64)
-    for i, (inputs, labels) in enumerate(trainloader):
+    for i, (inputs, labels) in tqdm(enumerate(trainloader), total=len(output_seq)):
 
         inputs, labels = inputs.to(device), labels.to(device)
         inputs.requires_grad_(True)
