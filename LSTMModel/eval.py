@@ -33,6 +33,7 @@ def eval_(model, set_name):
         outputs = outputs.cpu().detach().numpy()
         print(outputs.shape)
         pred = np.argmax(outputs)
+        print(pred)
         predictions = np.hstack((predictions, pred))
 
     print(predictions[:10])
