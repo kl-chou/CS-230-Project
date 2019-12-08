@@ -29,7 +29,7 @@ def eval_(model, set_name):
             # zero the parameter gradients
         # forward + backward + optimize
         outputs = model(inputs).squeeze()
-        pred = np.argmax(outputs.cpu())
+        pred = np.argmax(outputs.cpu().detach().numpy())
         predictions.extend(pred)
 
     print(predictions[:10])
