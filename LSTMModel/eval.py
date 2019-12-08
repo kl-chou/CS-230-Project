@@ -30,12 +30,14 @@ def eval_(model, set_name):
             # zero the parameter gradients
         # forward + backward + optimize
         outputs = model(inputs).squeeze()
-        pred = np.argmax(outputs.cpu().detach().numpy())
+        outputs = outputs.cpu().detach().numpy()
+        print(outputs.shape)
+        pred = np.argmax(outputs)
         predictions = np.hstack((predictions, pred))
 
     print(predictions[:10])
     print(output_seq[:10])
-    accuracy = np.sum(predictions == output_sequences) / len(predictions)
+    accuracy = np.sum(predictions == output_seq) / len(predictions)
     print('{} accuracy: {}'.format(set_name, accuracy))
     np.save('LSTMModel/predictions_{}'.format(set_name), predictions)
         
