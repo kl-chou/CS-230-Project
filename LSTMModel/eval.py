@@ -3,7 +3,7 @@ import numpy as np
 
 from preprocess import * 
 from lstm_model import * 
-
+from notes_dataset import * 
 
 if torch.cuda.is_available():  
   device = 'cuda:0' 
