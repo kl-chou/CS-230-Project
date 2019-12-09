@@ -25,10 +25,11 @@ def prepare_sequences(notes, n_vocab, set_name, note_to_int=None):
     network_output = []
 
     # create input sequences and the corresponding outputs
-    for i in range(0, len(notes) - sequence_length, 1):
+    end = min(len(notes) - sequence_length, 350000)
+    for i in range(0, end, 1):
         sequence_in = notes[i:i + sequence_length]
         sequence_out = notes[i + sequence_length]
-        network_input.append([note_to_int[char] if char in note_to_int else 0 for char in sequence_in ])
+        network_input.append([note_to_int[char] if char in note_to_int else 0 for char in sequence_in])
         network_output.append(note_to_int[sequence_out ] if sequence_out in note_to_int else 0)
 
     n_patterns = len(network_input)

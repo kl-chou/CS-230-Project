@@ -25,10 +25,7 @@ def eval_(model, set_name):
     for i, (inputs, labels) in tqdm(enumerate(trainloader), total=len(output_seq)):
 
         inputs, labels = inputs.to(device), labels.to(device)
-        inputs.requires_grad_(True)
 
-            # zero the parameter gradients
-        # forward + backward + optimize
         outputs = model(inputs).squeeze()
         outputs = outputs.cpu().detach().numpy()
         pred = np.argmax(outputs)
@@ -53,7 +50,7 @@ def main():
     model = model.to(device)
     model.eval()
 
-    sets = ['validation', 'test', 'train']
+    sets = ['train', 'validation', 'test']
     for name in sets:
         eval_(model, name)
 
